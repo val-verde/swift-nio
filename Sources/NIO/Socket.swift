@@ -238,7 +238,7 @@ typealias IOVector = iovec
                  controlBytes: inout UnsafeReceivedControlBytes) throws -> IOResult<Int> {
         var vec = iovec(iov_base: pointer.baseAddress, iov_len: numericCast(pointer.count))
 
-        return try withUnsafeMutablePointer(to: &vec) { vecPtr in
+        let result: IOResult <Int> = try withUnsafeMutablePointer(to: &vec) { vecPtr in
             return try storage.withMutableSockAddr { (sockaddrPtr, _) in
 #if os(Windows)
                 var messageHeader =
@@ -293,6 +293,8 @@ typealias IOVector = iovec
                 return result
             }
         }
+
+        return result
     }
 
     /// Send the content of a file descriptor to the remote peer (if possible a zero-copy strategy is applied).
