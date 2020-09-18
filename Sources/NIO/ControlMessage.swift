@@ -209,7 +209,11 @@ extension CInt {
     init(ecnValue: NIOExplicitCongestionNotificationState) {
         switch ecnValue {
         case .transportNotCapable:
+        #if os(Android)
+            preconditionFailure()
+        #else
             self = Posix.IPTOS_ECN_NOTECT
+        #endif
         case .transportCapableFlag0:
             self = Posix.IPTOS_ECN_ECT0
         case .transportCapableFlag1:
