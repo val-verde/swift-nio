@@ -25,6 +25,27 @@
 #include <pthread.h>
 #include <netinet/ip.h>
 
+#ifdef __ANDROID__
+enum EPOLL_EVENTS {
+    EPOLL_IN = EPOLLIN,
+    EPOLL_PRI = EPOLLPRI,
+    EPOLL_OUT = EPOLLOUT,
+    EPOLL_ERR = EPOLLERR,
+    EPOLL_HUP = EPOLLHUP,
+    EPOLL_VAL = EPOLLNVAL,
+    EPOLL_RDNORM = EPOLLRDNORM,
+    EPOLL_RDBAND = EPOLLRDBAND,
+    EPOLL_WRNORM = EPOLLWRNORM,
+    EPOLL_WRBAND = EPOLLWRBAND,
+    EPOLL_MSG = EPOLLMSG,
+    EPOLL_RDHUP = EPOLLRDHUP,
+    EPOLL_EXCLUSIVE = EPOLLEXCLUSIVE,
+    EPOLL_WAKEUP = EPOLLWAKEUP,
+    EPOLL_ONESHOT = EPOLLONESHOT,
+    EPOLL_ET = EPOLLET,
+};
+#endif
+
 // Some explanation is required here.
 //
 // Due to SR-6772, we cannot get Swift code to directly see any of the mmsg structures or

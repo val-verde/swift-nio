@@ -72,12 +72,12 @@ internal enum Epoll {
     public static let EPOLL_CTL_DEL: CInt = numericCast(CNIOLinux.EPOLL_CTL_DEL)
 
     #if os(Android)
-    public static let EPOLLIN: CUnsignedInt = 1 //numericCast(CNIOLinux.EPOLLIN)
-    public static let EPOLLOUT: CUnsignedInt = 4 //numericCast(CNIOLinux.EPOLLOUT)
-    public static let EPOLLERR: CUnsignedInt = 8 // numericCast(CNIOLinux.EPOLLERR)
-    public static let EPOLLRDHUP: CUnsignedInt = 8192 //numericCast(CNIOLinux.EPOLLRDHUP)
-    public static let EPOLLHUP: CUnsignedInt = 16 //numericCast(CNIOLinux.EPOLLHUP)
-    public static let EPOLLET: CUnsignedInt = 2147483648 //numericCast(CNIOLinux.EPOLLET)
+    public static let EPOLLIN: CUnsignedInt = numericCast(CNIOLinux.EPOLL_IN.rawValue)
+    public static let EPOLLOUT: CUnsignedInt = numericCast(CNIOLinux.EPOLL_OUT.rawValue)
+    public static let EPOLLERR: CUnsignedInt = numericCast(CNIOLinux.EPOLL_ERR.rawValue)
+    public static let EPOLLRDHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLL_RDHUP.rawValue)
+    public static let EPOLLHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLL_HUP.rawValue)
+    public static let EPOLLET: CUnsignedInt = numericCast(CNIOLinux.EPOLL_ET.rawValue)
     #else
     public static let EPOLLIN: CUnsignedInt = numericCast(CNIOLinux.EPOLLIN.rawValue)
     public static let EPOLLOUT: CUnsignedInt = numericCast(CNIOLinux.EPOLLOUT.rawValue)
