@@ -293,10 +293,10 @@ extension NIONetworkDevice {
             self.address = caddr.ifa_addr.flatMap { $0.convert() }
             self.netmask = caddr.ifa_netmask.flatMap { $0.convert() }
 
-            if (caddr.ifa_flags & UInt32(IFF_BROADCAST)) != 0, let addr = caddr.broadaddr {
+            if (caddr.ifa_flags & IFF_BROADCAST.rawValue) != 0, let addr = caddr.broadaddr {
                 self.broadcastAddress = addr.convert()
                 self.pointToPointDestinationAddress = nil
-            } else if (caddr.ifa_flags & UInt32(IFF_POINTOPOINT)) != 0, let addr = caddr.dstaddr {
+            } else if (caddr.ifa_flags & IFF_POINTOPOINT.rawValue) != 0, let addr = caddr.dstaddr {
                 self.broadcastAddress = nil
                 self.pointToPointDestinationAddress = addr.convert()
             } else {
@@ -304,7 +304,7 @@ extension NIONetworkDevice {
                 self.pointToPointDestinationAddress = nil
             }
 
-            self.multicastSupported = (caddr.ifa_flags & UInt32(IFF_MULTICAST)) != 0
+            self.multicastSupported = (caddr.ifa_flags & IFF_MULTICAST.rawValue) != 0
             do {
                 self.interfaceIndex = Int(try Posix.if_nametoindex(caddr.ifa_name))
             } catch {
@@ -480,10 +480,10 @@ public final class NIONetworkInterface {
             self.netmask = nil
         }
 
-        if (caddr.ifa_flags & UInt32(IFF_BROADCAST)) != 0, let addr = caddr.broadaddr {
+        if (caddr.ifa_flags & IFF_BROADCAST.rawValue) != 0, let addr = caddr.broadaddr {
             self.broadcastAddress = addr.convert()
             self.pointToPointDestinationAddress = nil
-        } else if (caddr.ifa_flags & UInt32(IFF_POINTOPOINT)) != 0, let addr = caddr.dstaddr {
+        } else if (caddr.ifa_flags & IFF_POINTOPOINT.rawValue) != 0, let addr = caddr.dstaddr {
             self.broadcastAddress = nil
             self.pointToPointDestinationAddress = addr.convert()
         } else {
@@ -491,7 +491,7 @@ public final class NIONetworkInterface {
             self.pointToPointDestinationAddress = nil
         }
 
-        if (caddr.ifa_flags & UInt32(IFF_MULTICAST)) != 0 {
+        if (caddr.ifa_flags & IFF_MULTICAST.rawValue) != 0 {
             self.multicastSupported = true
         } else {
             self.multicastSupported = false
