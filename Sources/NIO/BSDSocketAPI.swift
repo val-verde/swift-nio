@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 #if os(Windows)
-import ucrt
+import MSVCRT
+import WinSDK
 
 import let WinSDK.INVALID_SOCKET
 

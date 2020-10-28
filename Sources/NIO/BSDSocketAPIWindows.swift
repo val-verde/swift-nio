@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 #if os(Windows)
-import ucrt
+import MSVCRT
+import WinSDK
 
 import let WinSDK.AF_INET
 import let WinSDK.AF_INET6
@@ -440,7 +441,7 @@ extension NIOBSDSocket {
     static func sendfile(socket s: NIOBSDSocket.Handle, fd: CInt, offset: off_t,
                          len nNumberOfBytesToWrite: off_t)
             throws -> IOResult<Int> {
-        let hFile: HANDLE = HANDLE(bitPattern: ucrt._get_osfhandle(fd))!
+        let hFile: HANDLE = HANDLE(bitPattern: MSVCRT._get_osfhandle(fd))!
         if hFile == INVALID_HANDLE_VALUE {
             throw IOError(errnoCode: EBADF, reason: "_get_osfhandle")
         }

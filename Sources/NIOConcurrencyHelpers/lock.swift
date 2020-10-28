@@ -15,7 +15,7 @@
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 import Darwin
 #elseif os(Windows)
-import ucrt
+import MSVCRT
 import WinSDK
 #else
 import Glibc

@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 #if os(Windows)
-import ucrt
+import MSVCRT
+import WinSDK
 #endif
 
 let sysMalloc: @convention(c) (size_t) -> UnsafeMutableRawPointer? = malloc
