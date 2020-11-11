@@ -19,7 +19,7 @@ import WinSDK
 
 let sysMalloc: @convention(c) (size_t) -> UnsafeMutableRawPointer? = malloc
 let sysRealloc: @convention(c) (UnsafeMutableRawPointer?, size_t) -> UnsafeMutableRawPointer? = realloc
-let sysFree: @convention(c) (UnsafeMutableRawPointer?) -> Void = free
+let sysFree: @convention(c) (UnsafeMutableRawPointer?) -> Void = { $0?.deallocate() }
 
 extension _ByteBufferSlice: Equatable {}
 
