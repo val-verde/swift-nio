@@ -542,7 +542,7 @@ public final class SocketChannelTest : XCTestCase {
     }
     
     func testInstantTCPConnectionResetThrowsError() throws {
-        #if !os(Linux) && !os(Android)
+        #if !os(Linux) && !os(Android) && !os(Musl)
             // This test checks that we correctly fail with an error rather than
             // asserting or silently ignoring if a client aborts the connection
             // early with a RST during or immediately after accept().
@@ -733,7 +733,7 @@ public final class SocketChannelTest : XCTestCase {
 
     func testWeAreInterestedInReadEOFWhenChannelIsConnectedOnTheServerSide() throws {
         guard isEarlyEOFDeliveryWorkingOnThisOS else {
-            #if os(Linux) || os(Android)
+            #if os(Linux) || os(Android) || os(Musl)
             preconditionFailure("this should only ever be entered on Darwin.")
             #else
             return
@@ -789,7 +789,7 @@ public final class SocketChannelTest : XCTestCase {
 
     func testWeAreInterestedInReadEOFWhenChannelIsConnectedOnTheClientSide() throws {
         guard isEarlyEOFDeliveryWorkingOnThisOS else {
-            #if os(Linux) || os(Android)
+            #if os(Linux) || os(Android) || os(Musl)
             preconditionFailure("this should only ever be entered on Darwin.")
             #else
             return

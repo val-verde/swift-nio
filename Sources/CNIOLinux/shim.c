@@ -79,6 +79,8 @@ int CNIOLinux_pthread_getname_np(pthread_t thread, char *name, size_t len) {
 
     name[n] = '\0';
     return 0;
+#elif !defined(__GLIBC__)
+    return -1;
 #else
     return pthread_getname_np(thread, name, len);
 #endif

@@ -14,7 +14,7 @@
 
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 import CNIODarwin
-#elseif os(Linux) || os(FreeBSD) || os(Android)
+#elseif os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
 import CNIOLinux
 #endif
 

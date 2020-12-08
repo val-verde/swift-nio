@@ -242,7 +242,7 @@ extension NIOBSDSocket.SocketType {
 // Option Level
 extension NIOBSDSocket.OptionLevel {
     /// Socket options that apply only to IP sockets.
-    #if os(Linux) || os(Android)
+    #if os(Linux) || os(Android) || os(Musl)
         public static let ip: NIOBSDSocket.OptionLevel =
                 NIOBSDSocket.OptionLevel(rawValue: CInt(IPPROTO_IP))
     #else
@@ -251,7 +251,7 @@ extension NIOBSDSocket.OptionLevel {
     #endif
 
     /// Socket options that apply only to IPv6 sockets.
-    #if os(Linux) || os(Android)
+    #if os(Linux) || os(Android) || os(Musl)
         public static let ipv6: NIOBSDSocket.OptionLevel =
                 NIOBSDSocket.OptionLevel(rawValue: CInt(IPPROTO_IPV6))
     #elseif os(Windows)
@@ -263,7 +263,7 @@ extension NIOBSDSocket.OptionLevel {
     #endif
 
     /// Socket options that apply only to TCP sockets.
-    #if os(Linux) || os(Android)
+    #if os(Linux) || os(Android) || os(Musl)
         public static let tcp: NIOBSDSocket.OptionLevel =
                 NIOBSDSocket.OptionLevel(rawValue: CInt(IPPROTO_TCP))
     #elseif os(Windows)
@@ -355,7 +355,7 @@ extension NIOBSDSocket.Option {
             NIOBSDSocket.Option(rawValue: TCP_NODELAY)
 }
 
-#if os(Linux) || os(FreeBSD) || os(Android)
+#if os(Linux) || os(FreeBSD) || os(Android) || os(Musl)
 extension NIOBSDSocket.Option {
     /// Get information about the TCP connection.
     public static let tcp_info: NIOBSDSocket.Option =

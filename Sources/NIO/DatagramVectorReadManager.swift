@@ -111,6 +111,17 @@ struct DatagramVectorReadManager {
                 }
 
                 // Next we set up the msghdr structure. This points into the other vectors.
+            #if os(Musl)
+                let msgHdr = msghdr(msg_name: self.sockaddrVector.baseAddress! + i ,
+                                    msg_namelen: socklen_t(MemoryLayout<sockaddr_storage>.size),
+                                    msg_iov: self.ioVector.baseAddress! + i,
+                                    msg_iovlen: 1,  // This is weird, but each message gets only one array. Duh.
+                                    __pad1: 0,
+                                    msg_control: controlBytes.baseAddress,
+                                    msg_controllen: .init(controlBytes.count),
+                                    __pad2: 0,
+                                    msg_flags: 0)
+            #else
                 let msgHdr = msghdr(msg_name: self.sockaddrVector.baseAddress! + i ,
                                     msg_namelen: socklen_t(MemoryLayout<sockaddr_storage>.size),
                                     msg_iov: self.ioVector.baseAddress! + i,
@@ -118,6 +129,7 @@ struct DatagramVectorReadManager {
                                     msg_control: controlBytes.baseAddress,
                                     msg_controllen: .init(controlBytes.count),
                                     msg_flags: 0)
+            #endif
                 self.messageVector[i] = MMsgHdr(msg_hdr: msgHdr, msg_len: 0)
 
                 // Note that we don't set up the sockaddr vector: that's because it needs no initialization,

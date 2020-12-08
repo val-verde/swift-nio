@@ -432,7 +432,7 @@ final class DatagramChannelTests: XCTestCase {
     private func assertRecvMmsgFails(error: Int32, active: Bool) throws {
         // Only run this test on platforms that support recvmmsg: the others won't even
         // try.
-        #if os(Linux) || os(FreeBSD) || os(Android)
+        #if os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
         final class RecvMmsgHandler: ChannelInboundHandler {
             typealias InboundIn = AddressedEnvelope<ByteBuffer>
             typealias InboundOut = AddressedEnvelope<ByteBuffer>
@@ -594,7 +594,7 @@ final class DatagramChannelTests: XCTestCase {
         XCTAssertEqual(reads.count, 3)
 
         for (idx, read) in reads.enumerated() {
-            #if os(Linux) || os(FreeBSD) || os(Android)
+            #if os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
             XCTAssertEqual(read.data.readableBytes, 3, "index: \(idx)")
             #else
             XCTAssertEqual(read.data.readableBytes, 13, "index: \(idx)")
@@ -633,7 +633,7 @@ final class DatagramChannelTests: XCTestCase {
         // Now we want to count the number of readCompletes. On any platform without recvmmsg, we should have seen 10 or more
         // (as max messages per read is 3). On platforms with recvmmsg, we would expect to see
         // substantially fewer than 10, and potentially as low as 1.
-        #if os(Linux) || os(FreeBSD) || os(Android)
+        #if os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
         XCTAssertLessThan(try assertNoThrowWithValue(self.secondChannel.readCompleteCount()), 10)
         XCTAssertGreaterThanOrEqual(try assertNoThrowWithValue(self.secondChannel.readCompleteCount()), 1)
         #else

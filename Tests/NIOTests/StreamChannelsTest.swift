@@ -848,7 +848,7 @@ private func assertNoSelectorChanges(fd: CInt, file: StaticString = #file, line:
     guard numberOfEvents == 0 else {
         throw UnexpectedSelectorChanges(description: "\(ev)")
     }
-    #elseif os(Linux) || os(Android)
+    #elseif os(Linux) || os(Musl) || os(Android)
     var ev = Epoll.epoll_event()
     let numberOfEvents = try Epoll.epoll_wait(epfd: fd, events: &ev, maxevents: 1, timeout: 0)
     guard numberOfEvents == 0 else {

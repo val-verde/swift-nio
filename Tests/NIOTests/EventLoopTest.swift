@@ -551,7 +551,7 @@ public final class EventLoopTest : XCTestCase {
     }
 
     public func testEventLoopPinned() throws {
-        #if os(Linux) || os(Android)
+        #if os(Linux) || os(Android) || os(Musl)
             let body: ThreadInitializer = { t in
                 let set = LinuxCPUSet(0)
                 t.affinity = set
@@ -566,7 +566,7 @@ public final class EventLoopTest : XCTestCase {
     }
 
     public func testEventLoopPinnedCPUIdsConstructor() throws {
-        #if os(Linux) || os(Android)
+        #if os(Linux) || os(Android) || os(Musl)
             let group = MultiThreadedEventLoopGroup(pinnedCPUIds: [0])
             let eventLoop = group.next()
             let set = try eventLoop.submit {

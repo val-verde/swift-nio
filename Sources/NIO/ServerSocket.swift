@@ -87,7 +87,7 @@
     /// - throws: An `IOError` if the operation failed.
     func accept(setNonBlocking: Bool = false) throws -> Socket? {
         return try withUnsafeHandle { fd in
-            #if os(Linux)
+            #if os(Linux) || os(Musl)
             let flags: Int32
             if setNonBlocking {
                 flags = Linux.SOCK_NONBLOCK
@@ -103,7 +103,7 @@
                 return nil
             }
             let sock = try Socket(socket: fd)
-            #if !os(Linux)
+            #if !os(Linux) || os(Musl)
             if setNonBlocking {
                 do {
                     try sock.setNonBlocking()

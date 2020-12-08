@@ -107,6 +107,17 @@ private func doPendingDatagramWriteVectorOperation(pending: PendingDatagramWrite
             controlBytes.appendExplicitCongestionState(metadata: p.metadata, protocolFamily: p.address.protocol)
             let controlMessageBytePointer = controlBytes.validControlBytes
 
+        #if os(Musl)
+            let msg = msghdr(msg_name: addresses.baseAddress! + c,
+                             msg_namelen: addressLen,
+                             msg_iov: iovecs.baseAddress! + c,
+                             msg_iovlen: 1,
+                             __pad1: 0,
+                             msg_control: controlMessageBytePointer.baseAddress,
+                             msg_controllen: .init(controlMessageBytePointer.count),
+                             __pad2: 0,
+                             msg_flags: 0)
+        #else
             let msg = msghdr(msg_name: addresses.baseAddress! + c,
                              msg_namelen: addressLen,
                              msg_iov: iovecs.baseAddress! + c,
@@ -114,6 +125,7 @@ private func doPendingDatagramWriteVectorOperation(pending: PendingDatagramWrite
                              msg_control: controlMessageBytePointer.baseAddress,
                              msg_controllen: .init(controlMessageBytePointer.count),
                              msg_flags: 0)
+        #endif
             msgs[c] = MMsgHdr(msg_hdr: msg, msg_len: CUnsignedInt(toWriteForThisBuffer))
         }
         c += 1

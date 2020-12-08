@@ -12,9 +12,9 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if os(Linux) || os(Android) || os(FreeBSD) || os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
+#if os(Linux) || os(Musl) || os(Android) || os(FreeBSD) || os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
 
-#if os(Linux) || os(Android)
+#if os(Linux) || os(Android) || os(Musl)
 import CNIOLinux
 
 private let sys_pthread_getname_np = CNIOLinux_pthread_getname_np
@@ -39,7 +39,11 @@ private func sysPthread_create(handle: UnsafeMutablePointer<pthread_t?>,
     #if os(iOS) || os(macOS) || os(tvOS) || os(watchOS)
     return pthread_create(handle, nil, destructor, args)
     #else
+    #if os(Musl)
+    var handleLinux = pthread_t(bitPattern: 0)
+    #else
     var handleLinux = pthread_t()
+    #endif
     let result = pthread_create(&handleLinux,
                                 nil,
                                 destructor,
@@ -90,7 +94,7 @@ enum ThreadOpsPosix: ThreadOps {
 
             if let name = name {
                 let maximumThreadNameLength: Int
-                #if os(Linux) || os(Android)
+                #if os(Linux) || os(Musl) || os(Android)
                 maximumThreadNameLength = 15
                 #else
                 maximumThreadNameLength = .max

@@ -186,6 +186,16 @@ typealias IOVector = iovec
                                                     .bindMemory(to: CHAR.self,
                                                                 capacity: controlBytes.count)),
                            dwFlags: 0)
+#elseif os(Musl)
+                var messageHeader = msghdr(msg_name: notConstCorrectDestinationPtr,
+                                           msg_namelen: destinationSize,
+                                           msg_iov: vecPtr,
+                                           msg_iovlen: 1,
+                                           __pad1: 0,
+                                           msg_control: controlBytes.baseAddress,
+                                           msg_controllen: .init(controlBytes.count),
+                                           __pad2: 0,
+                                           msg_flags: 0)
 #else
                 var messageHeader = msghdr(msg_name: notConstCorrectDestinationPtr,
                                            msg_namelen: destinationSize,
@@ -244,6 +254,17 @@ typealias IOVector = iovec
                     storageLen = messageHeader.namelen
                 }
 #else
+            #if os(Musl)
+                var messageHeader = msghdr(msg_name: sockaddrPtr,
+                                           msg_namelen: storageLen,
+                                           msg_iov: vecPtr,
+                                           msg_iovlen: 1,
+                                           __pad1: 0,
+                                           msg_control: controlBytes.controlBytesBuffer.baseAddress,
+                                           msg_controllen: .init(controlBytes.controlBytesBuffer.count),
+                                           __pad2: 0,
+                                           msg_flags: 0)
+            #else
                 var messageHeader = msghdr(msg_name: sockaddrPtr,
                                            msg_namelen: storageLen,
                                            msg_iov: vecPtr,
@@ -251,6 +272,7 @@ typealias IOVector = iovec
                                            msg_control: controlBytes.controlBytesBuffer.baseAddress,
                                            msg_controllen: .init(controlBytes.controlBytesBuffer.count),
                                            msg_flags: 0)
+            #endif
                 defer {
                     // We need to write back the length of the message.
                     storageLen = messageHeader.msg_namelen
