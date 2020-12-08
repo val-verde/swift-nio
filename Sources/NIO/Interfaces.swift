@@ -39,7 +39,7 @@ import typealias WinSDK.UINT8
 #if !os(Windows)
 private extension ifaddrs {
     var dstaddr: UnsafeMutablePointer<sockaddr>? {
-        #if os(Linux) || os(Android)
+        #if os(Linux) || os(Android) || os(Musl)
         return self.ifa_ifu.ifu_dstaddr
         #elseif os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         return self.ifa_dstaddr
@@ -47,7 +47,7 @@ private extension ifaddrs {
     }
 
     var broadaddr: UnsafeMutablePointer<sockaddr>? {
-        #if os(Linux) || os(Android)
+        #if os(Linux) || os(Android) || os(Musl)
         return self.ifa_ifu.ifu_broadaddr
         #elseif os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
         return self.ifa_dstaddr

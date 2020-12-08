@@ -133,7 +133,7 @@ func doRequests(group: EventLoopGroup, number numberOfRequests: Int) throws -> I
 }
 
 func withAutoReleasePool<T>(_ execute: () throws -> T) rethrows -> T {
-    #if os(Linux)
+    #if os(Linux) || os(Musl)
     return try execute()
     #else
     return try autoreleasepool {

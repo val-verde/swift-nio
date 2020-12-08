@@ -304,7 +304,7 @@ class BaseSocket: BaseSocketProtocol {
     /// - throws: An `IOError` if creation of the socket failed.
     static func makeSocket(protocolFamily: NIOBSDSocket.ProtocolFamily, type: NIOBSDSocket.SocketType, setNonBlocking: Bool = false) throws -> NIOBSDSocket.Handle {
         var sockType: CInt = type.rawValue
-        #if os(Linux)
+        #if os(Linux) || os(Musl)
         if setNonBlocking {
             sockType = type.rawValue | Linux.SOCK_NONBLOCK
         }
@@ -312,7 +312,7 @@ class BaseSocket: BaseSocketProtocol {
         let sock = try NIOBSDSocket.socket(domain: protocolFamily,
                                            type: NIOBSDSocket.SocketType(rawValue: sockType),
                                            protocol: 0)
-        #if !os(Linux)
+        #if !os(Linux) || os(Musl)
         if setNonBlocking {
             do {
                 try NIOBSDSocket.setNonBlocking(socket: sock)

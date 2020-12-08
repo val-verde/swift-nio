@@ -22,7 +22,7 @@
 @_exported import Darwin.C
 import CNIODarwin
 internal typealias MMsgHdr = CNIODarwin_mmsghdr
-#elseif os(Linux) || os(FreeBSD) || os(Android)
+#elseif os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
 @_exported import Glibc
 import CNIOLinux
 internal typealias MMsgHdr = CNIOLinux_mmsghdr
@@ -110,7 +110,7 @@ private let sysInet_pton: @convention(c) (CInt, UnsafePointer<CChar>?, UnsafeMut
 private let sysSocketpair: @convention(c) (CInt, CInt, CInt, UnsafeMutablePointer<CInt>?) -> CInt = socketpair
 #endif
 
-#if os(Linux)
+#if os(Linux) || os(Musl)
 private let sysFstat: @convention(c) (CInt, UnsafeMutablePointer<stat>) -> CInt = fstat
 private let sysStat: @convention(c) (UnsafePointer<CChar>, UnsafeMutablePointer<stat>) -> CInt = stat
 private let sysUnlink: @convention(c) (UnsafePointer<CChar>) -> CInt = unlink
@@ -198,7 +198,7 @@ internal enum Posix {
     static let IPTOS_ECN_ECT0: CInt = CNIODarwin_IPTOS_ECN_ECT0
     static let IPTOS_ECN_ECT1: CInt = CNIODarwin_IPTOS_ECN_ECT1
     static let IPTOS_ECN_CE: CInt = CNIODarwin_IPTOS_ECN_CE
-#elseif os(Linux) || os(FreeBSD) || os(Android)
+#elseif os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
 
     static let UIO_MAXIOV: Int = Int(Glibc.UIO_MAXIOV)
     static let SHUT_RD: CInt = CInt(Glibc.SHUT_RD)
@@ -451,7 +451,7 @@ internal enum Posix {
                     let result: CInt = Darwin.sendfile(fd, descriptor, offset, &w, nil, 0)
                     written = w
                     return ssize_t(result)
-                #elseif os(Linux) || os(FreeBSD) || os(Android)
+                #elseif os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
                     var off: off_t = offset
                     let result: ssize_t = Glibc.sendfile(descriptor, fd, &off, count)
                     if result >= 0 {

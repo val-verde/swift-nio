@@ -15,7 +15,7 @@
 // This is a companion to System.swift that provides only Linux specials: either things that exist
 // only on Linux, or things that have Linux-specific extensions.
 
-#if os(Linux) || os(Android)
+#if os(Linux) || os(Android) || os(Musl)
 import CNIOLinux
 
 internal enum TimerFd {
@@ -78,6 +78,13 @@ internal enum Epoll {
     public static let EPOLLRDHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLL_RDHUP.rawValue)
     public static let EPOLLHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLL_HUP.rawValue)
     public static let EPOLLET: CUnsignedInt = numericCast(CNIOLinux.EPOLL_ET.rawValue)
+    #elseif os(Musl)
+    public static let EPOLLIN: CUnsignedInt = numericCast(CNIOLinux.EPOLLIN)
+    public static let EPOLLOUT: CUnsignedInt = numericCast(CNIOLinux.EPOLLOUT)
+    public static let EPOLLERR: CUnsignedInt = numericCast(CNIOLinux.EPOLLERR)
+    public static let EPOLLRDHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLLRDHUP)
+    public static let EPOLLHUP: CUnsignedInt = numericCast(CNIOLinux.EPOLLHUP)
+    public static let EPOLLET: CUnsignedInt = numericCast(CNIOLinux.EPOLLET)
     #else
     public static let EPOLLIN: CUnsignedInt = numericCast(CNIOLinux.EPOLLIN.rawValue)
     public static let EPOLLOUT: CUnsignedInt = numericCast(CNIOLinux.EPOLLOUT.rawValue)
@@ -117,7 +124,7 @@ internal enum Linux {
     static let cfsQuotaPath = "/sys/fs/cgroup/cpu/cpu.cfs_quota_us"
     static let cfsPeriodPath = "/sys/fs/cgroup/cpu/cpu.cfs_period_us"
     static let cpuSetPath = "/sys/fs/cgroup/cpuset/cpuset.cpus"
-#if os(Android)
+#if os(Android) || os(Musl)
     static let SOCK_CLOEXEC = Glibc.SOCK_CLOEXEC
     static let SOCK_NONBLOCK = Glibc.SOCK_NONBLOCK
 #else

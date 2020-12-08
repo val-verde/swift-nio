@@ -421,7 +421,7 @@ final class DatagramChannel: BaseSocketChannel<Socket> {
             pendingWrites.waterMark = value as! ChannelOptions.Types.WriteBufferWaterMark
         case _ as ChannelOptions.Types.DatagramVectorReadMessageCountOption:
             // We only support vector reads on these OSes. Let us know if there's another OS with this syscall!
-            #if os(Linux) || os(FreeBSD) || os(Android)
+            #if os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
             self.vectorReadManager.updateMessageCount(value as! Int)
             #else
             break
@@ -562,7 +562,7 @@ final class DatagramChannel: BaseSocketChannel<Socket> {
     }
 
     private func vectorReadFromSocket() throws -> ReadResult {
-        #if os(Linux) || os(FreeBSD) || os(Android)
+        #if os(Linux) || os(Musl) || os(FreeBSD) || os(Android)
         var buffer = self.recvAllocator.buffer(allocator: self.allocator)
         var readResult = ReadResult.none
 

@@ -12,7 +12,7 @@
 //
 //===----------------------------------------------------------------------===//
 
-#if os(Linux) || os(Android)
+#if os(Linux) || os(Android) || os(Musl)
 import CNIOLinux
 
     /// A set that contains CPU ids to use.
